@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-pub fn get_dates_map() -> BTreeMap<u64, Date> {
+pub fn get_dates_map() -> BTreeMap<usize, Date> {
     read_file("cit-HepPh-dates.txt")
         .lines()
         .map(|line| match line.split_once('\t') {
@@ -17,7 +17,9 @@ pub fn get_dates_map() -> BTreeMap<u64, Date> {
 pub fn parse() -> Graph {
     let lines = read_file("cit-HepPh.txt");
     let mut id_to_index: BTreeMap<usize, usize> = BTreeMap::new();
-    let mut adj_list: Vec<Vec<usize>> = vec![vec![]; MAX_NODES];
+    let mut index_to_id: BTreeMap<usize, usize> = BTreeMap::new();
+
+    let mut adj_list = vec![vec![]; MAX_NODES];
     let mut idx = 0;
     for line in lines.lines() {
         let (from, to): (usize, usize) = match line.split_once('\t') {
@@ -28,15 +30,19 @@ pub fn parse() -> Graph {
         for val in [from, to] {
             if !id_to_index.contains_key(&val) {
                 id_to_index.insert(val, idx);
+                index_to_id.insert(idx, val);
                 idx += 1;
             }
         }
 
         adj_list[id_to_index[&from]].push(id_to_index[&to]);
-        // adj_list[id_to_index[&to]].push(id_to_index[&from]);
     }
 
-    adj_list
+    Graph {
+        adj_list,
+        id_to_index,
+        index_to_id,
+    }
 }
 
 fn read_file(filename: &str) -> String {

@@ -13,9 +13,9 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
     let mut state = TarjanState {
         index: 0,
         stack: Vec::new(),
-        on_stack: vec![false; MAX_NODES],
-        index_of: vec![-1; MAX_NODES],
-        lowlink_of: vec![-1; MAX_NODES],
+        on_stack: vec![false; graph.adj_list.len()],
+        index_of: vec![-1; graph.adj_list.len()],
+        lowlink_of: vec![-1; graph.adj_list.len()],
         components: Vec::new(),
     };
 
@@ -26,7 +26,7 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
         state.stack.push(v);
         state.on_stack[v] = true;
 
-        for &w in &graph[v] {
+        for &w in &graph.adj_list[v] {
             if state.index_of[w] == -1 {
                 strong_connect(w, graph, state);
                 state.lowlink_of[v] = state.lowlink_of[v].min(state.lowlink_of[w]);
@@ -48,7 +48,7 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
         }
     }
 
-    for v in 0..MAX_NODES {
+    for v in 0..graph.adj_list.len() {
         if state.index_of[v] == -1 {
             strong_connect(v, graph, &mut state);
         }
