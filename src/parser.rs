@@ -17,7 +17,7 @@ pub fn get_dates_map() -> BTreeMap<u64, Date> {
 pub fn parse() -> Graph {
     let lines = read_file("cit-HepPh.txt");
     let mut id_to_index: BTreeMap<usize, usize> = BTreeMap::new();
-    let mut adj_list: Vec<Vec<usize>> = vec![vec![]; 34546];
+    let mut adj_list: Vec<Vec<usize>> = vec![vec![]; MAX_NODES];
     let mut idx = 0;
     for line in lines.lines() {
         let (from, to): (usize, usize) = match line.split_once('\t') {
@@ -33,6 +33,7 @@ pub fn parse() -> Graph {
         }
 
         adj_list[id_to_index[&from]].push(id_to_index[&to]);
+        // adj_list[id_to_index[&to]].push(id_to_index[&from]);
     }
 
     adj_list

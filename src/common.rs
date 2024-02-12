@@ -24,3 +24,5 @@ impl Date {
 }
 
 pub type Graph = Vec<Vec<usize>>;
+
+pub const MAX_NODES: usize = 34546;

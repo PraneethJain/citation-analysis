@@ -1,81 +1,58 @@
-pub struct StronglyConnectedComponents {
-    pub component: Vec<usize>,
+use crate::common::*;
 
-    pub state: Vec<u64>,
-
-    pub num_components: usize,
-
-    stack: Vec<usize>,
-    current_time: usize,
-}
-
-const NOT_DONE: u64 = 1 << 63;
-
-#[inline]
-fn set_done(vertex_state: &mut u64) {
-    *vertex_state ^= NOT_DONE;
-}
-
-#[inline]
-fn is_in_stack(vertex_state: u64) -> bool {
-    vertex_state != 0 && (vertex_state & NOT_DONE) != 0
-}
-
-#[inline]
-fn is_unvisited(vertex_state: u64) -> bool {
-    vertex_state == NOT_DONE
-}
-
-#[inline]
-fn get_discover_time(vertex_state: u64) -> u64 {
-    vertex_state ^ NOT_DONE
-}
-
-impl StronglyConnectedComponents {
-    pub fn new(mut num_vertices: usize) -> Self {
-        num_vertices += 1;
-        StronglyConnectedComponents {
-            component: vec![0; num_vertices],
-            state: vec![NOT_DONE; num_vertices],
-            num_components: 0,
-            stack: vec![],
-            current_time: 1,
-        }
+pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
+    struct TarjanState {
+        index: i32,
+        stack: Vec<usize>,
+        on_stack: Vec<bool>,
+        index_of: Vec<i32>,
+        lowlink_of: Vec<i32>,
+        components: Vec<Vec<usize>>,
     }
-    fn dfs(&mut self, v: usize, adj: &[Vec<usize>]) -> u64 {
-        let mut min_disc = self.current_time as u64;
-        self.state[v] ^= min_disc;
-        self.current_time += 1;
-        self.stack.push(v);
 
-        for &u in adj[v].iter() {
-            if is_unvisited(self.state[u]) {
-                min_disc = std::cmp::min(self.dfs(u, adj), min_disc);
-            } else if is_in_stack(self.state[u]) {
-                min_disc = std::cmp::min(get_discover_time(self.state[u]), min_disc);
+    let mut state = TarjanState {
+        index: 0,
+        stack: Vec::new(),
+        on_stack: vec![false; MAX_NODES],
+        index_of: vec![-1; MAX_NODES],
+        lowlink_of: vec![-1; MAX_NODES],
+        components: Vec::new(),
+    };
+
+    fn strong_connect(v: usize, graph: &Graph, state: &mut TarjanState) {
+        state.index_of[v] = state.index;
+        state.lowlink_of[v] = state.index;
+        state.index += 1;
+        state.stack.push(v);
+        state.on_stack[v] = true;
+
+        for &w in &graph[v] {
+            if state.index_of[w] == -1 {
+                strong_connect(w, graph, state);
+                state.lowlink_of[v] = state.lowlink_of[v].min(state.lowlink_of[w]);
+            } else if state.on_stack[w] {
+                state.lowlink_of[v] = state.lowlink_of[v].min(state.index_of[w]);
             }
         }
 
-        if min_disc == get_discover_time(self.state[v]) {
-            self.num_components += 1;
-            loop {
-                let u = self.stack.pop().unwrap();
-                self.component[u] = self.num_components;
-                set_done(&mut self.state[u]);
-                if u == v {
+        if state.lowlink_of[v] == state.index_of[v] {
+            let mut component: Vec<usize> = Vec::new();
+            while let Some(w) = state.stack.pop() {
+                state.on_stack[w] = false;
+                component.push(w);
+                if w == v {
                     break;
                 }
             }
+            state.components.push(component);
         }
+    }
 
-        min_disc
-    }
-    pub fn find_components(&mut self, adj: &[Vec<usize>]) {
-        self.state[0] = 0;
-        for v in 1..adj.len() {
-            if is_unvisited(self.state[v]) {
-                self.dfs(v, adj);
-            }
+    for v in 0..MAX_NODES {
+        if state.index_of[v] == -1 {
+            strong_connect(v, graph, &mut state);
         }
     }
+
+    state.components
 }
