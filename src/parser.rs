@@ -1,45 +1,25 @@
+use crate::common::*;
 use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
-use crate::common::*;
 
-pub fn parse() -> Graph {
-    let id_to_dates: BTreeMap<u64, Date> = read_file("cit-HepPh-dates.txt")
+pub fn get_dates_map() -> BTreeMap<u64, Date> {
+    read_file("cit-HepPh-dates.txt")
         .lines()
         .map(|line| match line.split_once('\t') {
             Some((id, date)) => (id.parse().unwrap(), Date::from(date)),
             None => panic!("No \t in line: {:?}", line),
         })
-        .collect();
+        .collect()
+}
 
+pub fn parse() -> Graph {
     let lines = read_file("cit-HepPh.txt");
     let mut adj_list: Graph = BTreeMap::new();
     for line in lines.lines() {
-        let (from, to): (Node, Node) = match line.split_once('\t') {
-            Some((from, to)) => {
-                let from_id: u64 = from.parse().unwrap();
-                let from_date = id_to_dates
-                    .get(&from_id)
-                    .unwrap_or(&Date::new())
-                    .clone();
-
-                let to_id: u64 = to.parse().unwrap();
-                let to_date = id_to_dates
-                    .get(&to_id)
-                    .unwrap_or(&Date::new())
-                    .clone();
-                (
-                    Node {
-                        id: from_id,
-                        date: from_date,
-                    },
-                    Node {
-                        id: to_id,
-                        date: to_date,
-                    },
-                )
-            }
+        let (from, to): (u64, u64) = match line.split_once('\t') {
+            Some((from, to)) => (from.parse().unwrap(), to.parse().unwrap()),
             None => panic!("No \t in line: {:?}", line),
         };
         adj_list.entry(from).or_default().push(to);

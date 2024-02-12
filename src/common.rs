@@ -25,12 +25,6 @@ impl Date {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Node {
-    pub date: Date,
-    pub id: u64,
-}
-
-pub type Graph = BTreeMap<Node, Vec<Node>>;
+pub type Graph = BTreeMap<u64, Vec<u64>>;
 
 
