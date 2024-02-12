@@ -16,16 +16,26 @@ pub fn get_dates_map() -> BTreeMap<u64, Date> {
 
 pub fn parse() -> Graph {
     let lines = read_file("cit-HepPh.txt");
-    let mut adj_list: Graph = BTreeMap::new();
+    let mut id_to_index: BTreeMap<usize, usize> = BTreeMap::new();
+    let mut adj_list: Vec<Vec<usize>> = vec![vec![]; 34546];
+    let mut idx = 0;
     for line in lines.lines() {
-        let (from, to): (u64, u64) = match line.split_once('\t') {
+        let (from, to): (usize, usize) = match line.split_once('\t') {
             Some((from, to)) => (from.parse().unwrap(), to.parse().unwrap()),
             None => panic!("No \t in line: {:?}", line),
         };
-        adj_list.entry(from).or_default().push(to);
+
+        for val in [from, to] {
+            if !id_to_index.contains_key(&val) {
+                id_to_index.insert(val, idx);
+                idx += 1;
+            }
+        }
+
+        adj_list[id_to_index[&from]].push(id_to_index[&to]);
     }
 
-    return adj_list;
+    adj_list
 }
 
 fn read_file(filename: &str) -> String {
@@ -43,5 +53,5 @@ fn read_file(filename: &str) -> String {
         panic!("couldn't read {}: {}", display, why)
     }
 
-    return lines;
+    lines
 }

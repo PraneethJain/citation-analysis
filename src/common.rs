@@ -1,5 +1,3 @@
-use std::collections::BTreeMap;
-
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Default)]
 pub struct Date {
     pub year: u16,
@@ -25,6 +23,4 @@ impl Date {
     }
 }
 
-pub type Graph = BTreeMap<u64, Vec<u64>>;
-
-
+pub type Graph = Vec<Vec<usize>>;
