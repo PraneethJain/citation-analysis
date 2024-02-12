@@ -1,4 +1,5 @@
 mod common;
+mod graphviz;
 mod parser;
 mod scc;
 
@@ -17,6 +18,10 @@ fn main() {
         .collect();
 
     let graphs = Graphs::new(graph, dates);
-    let some_graph = graphs.till(&Date::from("2001-03-31"));
-    println!("{}", some_graph.adj_list.len());
+    for year in 1992..=2003 {
+        for month in 1..=12 {
+            let g = graphs.till(&Date::from(&format!("{:04}-{:02}-01", year, month)));
+            graphviz::save(&format!("graphs/g{:04}-{:02}.gv", year, month), &g);
+        }
+    }
 }
