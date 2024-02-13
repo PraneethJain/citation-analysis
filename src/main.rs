@@ -12,5 +12,9 @@ fn main() {
         })
         .collect();
 
-    let _graphs = Graphs::new(graph, dates);
+    let graphs = Graphs::new(graph, dates);
+    // save_graphs(&graphs);
+    // save_scc_counts("plots/scc_counts.txt", &graphs);
+    // save_largest_scc_sizes("plots/largest_scc_sizes.txt", &graphs);
+    save_freeman_degree_centralization("plots/freeman_degree_centralization.txt", &graphs);
 }

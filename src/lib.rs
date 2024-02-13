@@ -1,3 +1,4 @@
+pub mod centrality;
 pub mod common;
 pub mod graphviz;
 pub mod parser;
@@ -41,4 +42,21 @@ pub fn save_largest_scc_sizes(filename: &str, graphs: &Graphs) {
             })
             .collect::<Vec<_>>(),
     );
+}
+
+pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
+    plot::line_plot(
+        filename,
+        &dates()
+            .map(|date_str| {
+                let g = graphs.till(&Date::from(&date_str));
+                let degree_centralities = centrality::degree_centralities(&g);
+
+                let n = g.adj_list.len();
+                let freeman_centralization =
+                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 2));
+                (date_str, freeman_centralization)
+            })
+            .collect::<Vec<_>>(),
+    )
 }
