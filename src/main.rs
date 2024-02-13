@@ -12,6 +12,5 @@ fn main() {
         })
         .collect();
 
-    let graphs = Graphs::new(graph, dates);
-    save_largest_scc_sizes("plots/largest_scc_sizes.txt", &graphs);
+    let _graphs = Graphs::new(graph, dates);
 }
