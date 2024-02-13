@@ -25,6 +25,7 @@ impl Date {
     }
 }
 
+#[derive(Clone)]
 pub struct Graph {
     pub adj_list: Vec<Vec<usize>>,
     pub index_to_id: BTreeMap<usize, usize>,
@@ -45,7 +46,6 @@ impl Graphs {
         let mut adj_list = vec![vec![]; MAX_NODES];
         let mut index_to_id: BTreeMap<usize, usize> = BTreeMap::new();
         let mut id_to_index: BTreeMap<usize, usize> = BTreeMap::new();
-        let mut dates: Vec<Date> = vec![Date::old(); MAX_NODES];
         let mut index = 0;
 
         for (from, tos) in self.full_graph.adj_list.iter().enumerate() {
@@ -73,12 +73,7 @@ impl Graphs {
                 adj_list[id_to_index[&from]].push(id_to_index[&to]);
             }
         }
-        index_to_id = index_to_id
-            .into_iter()
-            .map(|(idx, id)| (idx, self.full_graph.index_to_id[&id]))
-            .collect();
         adj_list.resize(index, vec![]);
-        dates.resize(index, Date::old());
         Graph {
             adj_list,
             index_to_id,
