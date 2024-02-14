@@ -1,9 +1,9 @@
 pub mod centrality;
 pub mod common;
+pub mod community_detection;
 pub mod graphviz;
 pub mod parser;
 pub mod plot;
-pub mod scc;
 
 pub use common::*;
 
@@ -24,7 +24,7 @@ pub fn save_scc_counts(filename: &str, graphs: &Graphs) {
         &dates()
             .map(|date_str| {
                 let g = graphs.till(&Date::from(&date_str));
-                let scc = scc::tarjan_scc(&g);
+                let scc = community_detection::scc::tarjan_scc(&g);
                 (date_str, scc.len())
             })
             .collect::<Vec<_>>(),
@@ -37,7 +37,7 @@ pub fn save_largest_scc_sizes(filename: &str, graphs: &Graphs) {
         &dates()
             .map(|date_str| {
                 let g = graphs.till(&Date::from(&date_str));
-                let scc = scc::tarjan_scc(&g);
+                let scc = community_detection::scc::tarjan_scc(&g);
                 (date_str, scc.iter().map(|x| x.len()).max().unwrap())
             })
             .collect::<Vec<_>>(),
