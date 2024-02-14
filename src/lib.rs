@@ -60,3 +60,37 @@ pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
             .collect::<Vec<_>>(),
     )
 }
+
+pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
+    plot::line_plot(
+        filename,
+        &dates()
+            .map(|date_str| {
+                let g = graphs.till(&Date::from(&date_str));
+                let degree_centralities = centrality::indegree_centralities(&g);
+
+                let n = g.adj_list.len();
+                let freeman_centralization =
+                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 1));
+                (date_str, freeman_centralization)
+            })
+            .collect::<Vec<_>>(),
+    )
+}
+
+pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
+    plot::line_plot(
+        filename,
+        &dates()
+            .map(|date_str| {
+                let g = graphs.till(&Date::from(&date_str));
+                let degree_centralities = centrality::outdegree_centralities(&g);
+
+                let n = g.adj_list.len();
+                let freeman_centralization =
+                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 1));
+                (date_str, freeman_centralization)
+            })
+            .collect::<Vec<_>>(),
+    )
+}

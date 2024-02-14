@@ -1,6 +1,6 @@
 pub mod degree_centrality;
 
-pub use degree_centrality::degree_centralities;
+pub use degree_centrality::*;
 
 pub fn freeman_centralization(centralities: &[usize], theoretical_maximum: usize) -> f32 {
     let max = centralities.iter().max().unwrap();
