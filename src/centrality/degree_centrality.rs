@@ -1,9 +1,7 @@
-use crate::common::*;
+pub fn degree_centralities(adj_list: &Vec<Vec<usize>>) -> Vec<usize> {
+    let mut degrees = vec![0; adj_list.len()];
 
-pub fn degree_centralities(graph: &Graph) -> Vec<usize> {
-    let mut degrees = vec![0; graph.adj_list.len()];
-
-    for (from, tos) in graph.adj_list.iter().enumerate() {
+    for (from, tos) in adj_list.iter().enumerate() {
         degrees[from] += tos.len();
         for &to in tos {
             degrees[to] += 1;
@@ -13,10 +11,10 @@ pub fn degree_centralities(graph: &Graph) -> Vec<usize> {
     degrees
 }
 
-pub fn indegree_centralities(graph: &Graph) -> Vec<usize> {
-    let mut indegrees = vec![0; graph.adj_list.len()];
+pub fn indegree_centralities(adj_list: &Vec<Vec<usize>>) -> Vec<usize> {
+    let mut indegrees = vec![0; adj_list.len()];
 
-    for tos in graph.adj_list.iter() {
+    for tos in adj_list.iter() {
         for &to in tos {
             indegrees[to] += 1;
         }
@@ -25,6 +23,6 @@ pub fn indegree_centralities(graph: &Graph) -> Vec<usize> {
     indegrees
 }
 
-pub fn outdegree_centralities(graph: &Graph) -> Vec<usize> {
-    graph.adj_list.iter().map(|tos| tos.len()).collect()
+pub fn outdegree_centralities(adj_list: &Vec<Vec<usize>>) -> Vec<usize> {
+    adj_list.iter().map(|tos| tos.len()).collect()
 }

@@ -50,11 +50,15 @@ pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
         &dates()
             .map(|date_str| {
                 let g = graphs.till(&Date::from(&date_str));
-                let degree_centralities = centrality::degree_centralities(&g);
+                let degree_centralities = centrality::degree_centralities(&g.adj_list);
+                let max_degree_centralities = centrality::degree_centralities(
+                    &centrality::create_star_graph_undirected(g.adj_list.len()),
+                );
 
-                let n = g.adj_list.len();
-                let freeman_centralization =
-                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 2));
+                let freeman_centralization = centrality::freeman_centralization(
+                    &degree_centralities,
+                    &max_degree_centralities,
+                );
                 (date_str, freeman_centralization)
             })
             .collect::<Vec<_>>(),
@@ -67,11 +71,15 @@ pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
         &dates()
             .map(|date_str| {
                 let g = graphs.till(&Date::from(&date_str));
-                let degree_centralities = centrality::indegree_centralities(&g);
+                let indegree_centralities = centrality::indegree_centralities(&g.adj_list);
+                let max_indegree_centralities = centrality::indegree_centralities(
+                    &centrality::create_star_graph_undirected(g.adj_list.len()),
+                );
 
-                let n = g.adj_list.len();
-                let freeman_centralization =
-                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 1));
+                let freeman_centralization = centrality::freeman_centralization(
+                    &indegree_centralities,
+                    &max_indegree_centralities,
+                );
                 (date_str, freeman_centralization)
             })
             .collect::<Vec<_>>(),
@@ -84,11 +92,15 @@ pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
         &dates()
             .map(|date_str| {
                 let g = graphs.till(&Date::from(&date_str));
-                let degree_centralities = centrality::outdegree_centralities(&g);
+                let outdegree_centralities = centrality::outdegree_centralities(&g.adj_list);
+                let max_outdegree_centralities = centrality::outdegree_centralities(
+                    &centrality::create_star_graph_out(g.adj_list.len()),
+                );
 
-                let n = g.adj_list.len();
-                let freeman_centralization =
-                    centrality::freeman_centralization(&degree_centralities, (n - 1) * (n - 1));
+                let freeman_centralization = centrality::freeman_centralization(
+                    &outdegree_centralities,
+                    &max_outdegree_centralities,
+                );
                 (date_str, freeman_centralization)
             })
             .collect::<Vec<_>>(),
