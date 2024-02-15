@@ -6,17 +6,16 @@ pub use betweenness_centrality::*;
 pub use degree_centrality::*;
 pub use triangles::*;
 
-use std::ops::Sub;
-fn measure<T>(centralites: &[T]) -> T
-where
-    T: std::iter::Sum + Sub<Output = T> + Ord + Copy,
-{
-    let max = *centralites.iter().max().unwrap();
+fn measure(centralites: &[f32]) -> f32 {
+    let max = centralites
+        .iter()
+        .copied()
+        .fold(f32::NEG_INFINITY, f32::max);
     centralites.iter().map(|&c| max - c).sum()
 }
 
-pub fn freeman_centralization(centralities: &[usize], max_centralities: &[usize]) -> f32 {
-    measure(centralities) as f32 / measure(max_centralities) as f32
+pub fn freeman_centralization(centralities: &[f32], max_centralities: &[f32]) -> f32 {
+    measure(centralities) / measure(max_centralities)
 }
 
 pub fn create_star_graph_out(n: usize) -> Vec<Vec<usize>> {

@@ -106,3 +106,25 @@ pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
             .collect::<Vec<_>>(),
     )
 }
+
+pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) {
+    plot::line_plot(
+        filename,
+        &dates()
+            .map(|date_str| {
+                let g = graphs.till(&Date::from(&date_str));
+                let betweenness_centralities = centrality::betweenness_centralities(&g.adj_list);
+                let max_betweenness_centralities = centrality::betweenness_centralities(
+                    &centrality::create_star_graph_undirected(g.adj_list.len()),
+                );
+
+                let freeman_centralization = centrality::freeman_centralization(
+                    &betweenness_centralities,
+                    &max_betweenness_centralities,
+                );
+
+                (date_str, freeman_centralization)
+            })
+            .collect::<Vec<_>>(),
+    )
+}
