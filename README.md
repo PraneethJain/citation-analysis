@@ -43,8 +43,8 @@ ignore the scattered components.
 #### Directed Graph
 
 - We will restrict our discussion to the years 1999 and later, due to the fact
-  that the graph is heavily disconnected before that.
-  [source](#strongly-connected-components)
+  that [the graph is heavily disconnected before
+  that](#strongly-connected-components).
 - The case of the directed graph is particularly uninteresting, as there is
   only one large community at all times. Girwan-Newman removes the edge with
   the highest betweenness centrality, and doing so for the directed graph
