@@ -1,8 +1,10 @@
 mod betweenness_centrality;
 mod degree_centrality;
+mod triangles;
 
 pub use betweenness_centrality::*;
 pub use degree_centrality::*;
+pub use triangles::*;
 
 use std::ops::Sub;
 fn measure<T>(centralites: &[T]) -> T
