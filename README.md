@@ -1,4 +1,4 @@
-# Analysis of High-energy physics citation network
+# Analysis of High-Energy Physics citation network
 > http://snap.stanford.edu/data/cit-HepPh.html
 
 ![graph-animation](./graphs/output.gif)
@@ -32,11 +32,22 @@
 
 TO DO: PUT THE CENTRALITY MEASURES HERE
 
-# Girwan-Newman Community Detection
+## Community Detection
 
 Since the graph has one big SCC and a large number of scattered smaller
-components, we will only be performing community detection on the large scc and
+components, we will only be performing community detection on the large SCC and
 ignore the scattered components.
 
-## Undirected
+### Girwan-Newman 
 
+#### Directed Graph
+
+- We will restrict our discussion to the years 1999 and later, due to the fact
+  that the graph is heavily disconnected before that.
+  [source](#strongly-connected-components)
+- The case of the directed graph is particularly uninteresting, as there is
+  only one large community at all times. Girwan-Newman removes the edge with
+  the highest betweenness centrality, and doing so for the directed graph
+  results in the same community, but with one less node.
+
+#### Undirected Graph
