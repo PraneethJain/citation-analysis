@@ -3,7 +3,7 @@
 
 ![graph-animation](./graphs/output.gif)
 
-## Some properties plotted over time
+## Some properties
 
 ### Strongly Connected Components
 
@@ -104,3 +104,9 @@ ignore the scattered components.
 </p>
 
 > 1992 (top left), 1993 (top right), 1994 (bottom left), 1995 (bottom right)
+
+## Tools Used
+- [rust](https://www.rust-lang.org/): Programming language of choice
+- [graphviz](https://graphviz.org/): Command line graph visualization tool
+- [gnuplot](http://www.gnuplot.info/): Command line plotting tool
+- [ffmpeg](https://ffmpeg.org/): For creating the graph animation
