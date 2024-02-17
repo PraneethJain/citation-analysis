@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::fmt;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Default)]
 pub struct Date {
@@ -8,6 +9,9 @@ pub struct Date {
 }
 
 impl Date {
+    pub fn new(year: u16, month: u8, date: u8) -> Self {
+        Self { year, month, date }
+    }
     pub fn from(date_str: &str) -> Self {
         let date = date_str[8..].parse().unwrap();
         let month = date_str[5..7].parse().unwrap();
@@ -22,6 +26,12 @@ impl Date {
             month: 0,
             year: 0,
         };
+    }
+}
+
+impl fmt::Display for Date {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:04}-{:02}-{:02}", self.year, self.month, self.date)
     }
 }
 

@@ -36,7 +36,7 @@ pub fn parse() -> Graph {
         }
 
         adj_list[id_to_index[&from]].push(id_to_index[&to]);
-        adj_list[id_to_index[&to]].push(id_to_index[&from]);
+        // adj_list[id_to_index[&to]].push(id_to_index[&from]);
     }
 
     Graph {

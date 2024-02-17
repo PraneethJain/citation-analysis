@@ -7,14 +7,15 @@ pub mod plot;
 
 pub use common::*;
 
-fn dates() -> impl Iterator<Item = String> {
-    (1992..=2002).flat_map(|year| (1..=12).map(move |month| format!("{:04}-{:02}-01", year, month)))
+fn dates() -> impl Iterator<Item = Date> {
+    (1992..=2002).flat_map(|year| (1..=12).map(move |month| Date::new(year, month, 1)))
 }
 
 pub fn save_graphs(graphs: &Graphs) {
-    dates().for_each(|date_str| {
-        let filename = String::from("graphs/g") + &date_str[..7] + ".gv";
-        graphviz::save(&filename, &graphs.till(&Date::from(&date_str)));
+    dates().for_each(|date| {
+        let filename =
+            String::from("graphs/g") + &format!("{:04}-{:02}", date.year, date.month) + ".gv";
+        graphviz::save(&filename, &graphs.till(&date));
     });
 }
 
@@ -22,10 +23,10 @@ pub fn save_scc_counts(filename: &str, graphs: &Graphs) {
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let scc = community_detection::tarjan_scc(&g.adj_list);
-                (date_str, scc.len())
+                (date, scc.len())
             })
             .collect::<Vec<_>>(),
     );
@@ -35,10 +36,10 @@ pub fn save_largest_scc_sizes(filename: &str, graphs: &Graphs) {
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let scc = community_detection::tarjan_scc(&g.adj_list);
-                (date_str, scc.iter().map(|x| x.len()).max().unwrap())
+                (date, scc.iter().map(|x| x.len()).max().unwrap())
             })
             .collect::<Vec<_>>(),
     );
@@ -48,8 +49,8 @@ pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let degree_centralities = centrality::degree_centralities(&g.adj_list);
                 let max_degree_centralities = centrality::degree_centralities(
                     &centrality::create_star_graph_undirected(g.adj_list.len()),
@@ -59,7 +60,7 @@ pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
                     &degree_centralities,
                     &max_degree_centralities,
                 );
-                (date_str, freeman_centralization)
+                (date, freeman_centralization)
             })
             .collect::<Vec<_>>(),
     )
@@ -69,8 +70,8 @@ pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let indegree_centralities = centrality::indegree_centralities(&g.adj_list);
                 let max_indegree_centralities = centrality::indegree_centralities(
                     &centrality::create_star_graph_undirected(g.adj_list.len()),
@@ -80,7 +81,7 @@ pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
                     &indegree_centralities,
                     &max_indegree_centralities,
                 );
-                (date_str, freeman_centralization)
+                (date, freeman_centralization)
             })
             .collect::<Vec<_>>(),
     )
@@ -90,8 +91,8 @@ pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let outdegree_centralities = centrality::outdegree_centralities(&g.adj_list);
                 let max_outdegree_centralities = centrality::outdegree_centralities(
                     &centrality::create_star_graph_out(g.adj_list.len()),
@@ -101,7 +102,7 @@ pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
                     &outdegree_centralities,
                     &max_outdegree_centralities,
                 );
-                (date_str, freeman_centralization)
+                (date, freeman_centralization)
             })
             .collect::<Vec<_>>(),
     )
@@ -111,8 +112,8 @@ pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) 
     plot::line_plot(
         filename,
         &dates()
-            .map(|date_str| {
-                let g = graphs.till(&Date::from(&date_str));
+            .map(|date| {
+                let g = graphs.till(&date);
                 let betweenness_centralities = centrality::betweenness_centralities(&g.adj_list);
                 let max_betweenness_centralities = centrality::betweenness_centralities(
                     &centrality::create_star_graph_undirected(g.adj_list.len()),
@@ -123,7 +124,7 @@ pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) 
                     &max_betweenness_centralities,
                 );
 
-                (date_str, freeman_centralization)
+                (date, freeman_centralization)
             })
             .collect::<Vec<_>>(),
     )
