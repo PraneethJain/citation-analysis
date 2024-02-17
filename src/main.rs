@@ -13,11 +13,11 @@ fn main() {
         .collect();
 
     let graphs = Graphs::new(graph, dates);
-    let g = graphs.till(&Date::from("1992-01-01"));
+    let g = graphs.till(&Date::from("1993-01-01"));
     let largest_scc_graph = community_detection::largest_scc_graph(&g);
-    let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 10);
+    let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 7);
     graphviz::save_with_colors(
-        "community_graphs/girwan_newman/g1992.gv",
+        "community_graphs/girwan_newman/g1993.gv",
         &largest_scc_graph.adj_list,
         &communities,
     );
