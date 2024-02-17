@@ -1,4 +1,4 @@
-for ((i=1994; i<=1994; i++)); do
+for ((i=1995; i<=1995; i++)); do
     input_file="g${i}.gv"
     output_file="g${i}.png"
     
