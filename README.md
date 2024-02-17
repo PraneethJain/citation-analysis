@@ -30,7 +30,33 @@
   <img src="plots/largest_wcc_sizes.png" align="middle" width="45%" />
 </p>
 
-TO DO: PUT THE CENTRALITY MEASURES HERE
+### Degree Centrality
+
+<p align="middle">
+  <img src="plots/freeman_degree_centralization.png" align="middle" width="45%" />
+  <img src="plots/max_degree_centralization.png" align="middle" width="45%" />
+</p>
+
+### Indegree Centrality
+
+<p align="middle">
+  <img src="plots/freeman_indegree_centralization.png" align="middle" width="45%" />
+  <img src="plots/max_indegree_centralization.png" align="middle" width="45%" />
+</p>
+
+### Outdegree Centrality
+
+<p align="middle">
+  <img src="plots/freeman_outdegree_centralization.png" align="middle" width="45%" />
+  <img src="plots/max_outdegree_centralization.png" align="middle" width="45%" />
+</p>
+
+### Betweenness Centrality
+
+<p align="middle">
+  <img src="plots/freeman_betweenness_centralization.png" align="middle" width="45%" />
+  <img src="plots/max_betweenness_centralization.png" align="middle" width="45%" />
+</p>
 
 ## Community Detection
 
