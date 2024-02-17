@@ -77,3 +77,16 @@ ignore the scattered components.
   results in the same community, but with one less node.
 
 #### Undirected Graph
+- The undirected graph results in interesting communities, but the algorithm is far too slow to run completely.
+- Parallelizing Girwan-Newman over multiple threads resulted in a 4.9x speedup, which made community detection uptil 1995 feasible.
+
+<p align="middle">
+  <img src="community_graphs/girwan_newman/g1992.png" align="middle" width="45%" />
+  <img src="community_graphs/girwan_newman/g1993.png" align="middle" width="45%" />
+</p>
+<p align="middle">
+  <img src="community_graphs/girwan_newman/g1994.png" align="middle" width="45%" />
+  <img src="community_graphs/girwan_newman/g1995.png" align="middle" width="45%" />
+</p>
+
+> 1992 (top left), 1993 (top right), 1994 (bottom left), 1995 (bottom right)
