@@ -15,9 +15,12 @@ fn main() {
     let graphs = Graphs::new(graph, dates);
     let g = graphs.till(&Date::from("1992-01-01"));
     let largest_scc_graph = community_detection::largest_scc_graph(&g);
-    let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 6);
-    graphviz::save_with_colors("community_graphs/girwan_newman/g1992.gv", &largest_scc_graph.adj_list, &communities);
-    // println!("{:?}", partitioned_graph);
+    let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 10);
+    graphviz::save_with_colors(
+        "community_graphs/girwan_newman/g1992.gv",
+        &largest_scc_graph.adj_list,
+        &communities,
+    );
 
     // save_graphs(&graphs);
     // save_scc_counts("plots/scc_counts.txt", &graphs);

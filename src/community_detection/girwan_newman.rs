@@ -4,7 +4,6 @@ use std::collections::{BTreeMap, VecDeque};
 fn edge_betweenness_centralities(adj_list: &Vec<Vec<usize>>) -> BTreeMap<(usize, usize), f32> {
     let n = adj_list.len();
 
-    // single source shortest paths
     (0..n)
         .into_par_iter()
         .map(|s| {
@@ -20,13 +19,11 @@ fn edge_betweenness_centralities(adj_list: &Vec<Vec<usize>>) -> BTreeMap<(usize,
             while let Some(v) = queue.pop_front() {
                 stack.push(v);
                 for &w in &adj_list[v] {
-                    // path discovery
                     if dist[w] < 0 {
                         queue.push_back(w);
                         dist[w] = dist[v] + 1;
                     }
 
-                    // path counting
                     if dist[w] == dist[v] + 1 {
                         sigma[w] += sigma[v];
                         pred[w].push(v);
@@ -34,7 +31,6 @@ fn edge_betweenness_centralities(adj_list: &Vec<Vec<usize>>) -> BTreeMap<(usize,
                 }
             }
 
-            // accumulation
             let mut delta = vec![0.0; n];
             while let Some(w) = stack.pop() {
                 for &v in &pred[w] {
@@ -66,11 +62,13 @@ pub fn girwan_newman(adj_list: &Vec<Vec<usize>>, max_cluster_size: usize) -> Vec
             working_adj_list[w].retain(|&x| x != v);
 
             let sccs = super::scc::tarjan_scc(&working_adj_list);
-            println!(
-                "{:?}",
-                prev_sccs.iter().map(|x| x.len()).collect::<Vec<_>>()
-            );
-            println!("{}", prev_sccs.len());
+            if sccs.len() != prev_sccs.len() {
+                println!(
+                    "{} {:?}",
+                    sccs.len(),
+                    sccs.iter().map(|x| x.len()).collect::<Vec<_>>()
+                );
+            }
             match sccs.len().cmp(&max_cluster_size) {
                 std::cmp::Ordering::Greater => break prev_sccs,
                 std::cmp::Ordering::Equal => break sccs,

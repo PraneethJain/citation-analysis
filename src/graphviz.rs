@@ -37,6 +37,7 @@ pub fn save_with_colors(filename: &str, adj_list: &Vec<Vec<usize>>, partitions: 
             better_partitions.push(partition.to_vec());
         }
     }
+    better_partitions.sort();
 
     for (partition, nodes) in better_partitions.into_iter().enumerate() {
         for index in nodes {
