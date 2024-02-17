@@ -30,6 +30,7 @@ fn main() {
     // save_max_degree_centralization("plots/max_degree_centralization.txt", &graphs);
     // save_max_indegree_centralization("plots/max_indegree_centralization.txt", &graphs);
     // save_max_outdegree_centralization("plots/max_outdegree_centralization.txt", &graphs);
+    // save_max_betweenness_centralization("plots/max_betweenness_centralization.txt", &graphs);
     // save_freeman_degree_centralization("plots/freeman_degree_centralization.txt", &graphs);
     // save_freeman_indegree_centralization("plots/freeman_indegree_centralization.txt", &graphs);
     // save_freeman_outdegree_centralization("plots/freeman_outdegree_centralization.txt", &graphs);
