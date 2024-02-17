@@ -1,52 +1,44 @@
-use rayon::prelude::*;
 use std::collections::{BTreeMap, VecDeque};
 
 fn edge_betweenness_centralities(adj_list: &Vec<Vec<usize>>) -> BTreeMap<(usize, usize), f32> {
     let n = adj_list.len();
+    let mut betweenness = BTreeMap::new();
 
-    (0..n)
-        .into_par_iter()
-        .map(|s| {
-            let mut betweenness = BTreeMap::new();
-            let mut stack = Vec::new();
-            let mut pred = vec![Vec::new(); n];
-            let mut sigma = vec![0; n];
-            let mut dist = vec![-1; n];
-            sigma[s] = 1;
-            dist[s] = 0;
-            let mut queue = VecDeque::new();
-            queue.push_back(s);
-            while let Some(v) = queue.pop_front() {
-                stack.push(v);
-                for &w in &adj_list[v] {
-                    if dist[w] < 0 {
-                        queue.push_back(w);
-                        dist[w] = dist[v] + 1;
-                    }
+    for s in 0..n {
+        let mut stack = Vec::new();
+        let mut pred = vec![Vec::new(); n];
+        let mut sigma = vec![0; n];
+        let mut dist = vec![-1; n];
+        sigma[s] = 1;
+        dist[s] = 0;
+        let mut queue = VecDeque::new();
+        queue.push_back(s);
+        while let Some(v) = queue.pop_front() {
+            stack.push(v);
+            for &w in &adj_list[v] {
+                if dist[w] < 0 {
+                    queue.push_back(w);
+                    dist[w] = dist[v] + 1;
+                }
 
-                    if dist[w] == dist[v] + 1 {
-                        sigma[w] += sigma[v];
-                        pred[w].push(v);
-                    }
+                if dist[w] == dist[v] + 1 {
+                    sigma[w] += sigma[v];
+                    pred[w].push(v);
                 }
             }
+        }
 
-            let mut delta = vec![0.0; n];
-            while let Some(w) = stack.pop() {
-                for &v in &pred[w] {
-                    let c = (1.0 + delta[w]) * sigma[v] as f32 / sigma[w] as f32;
-                    *betweenness.entry((v, w)).or_default() += c;
-                    delta[v] += c;
-                }
+        let mut delta = vec![0.0; n];
+        while let Some(w) = stack.pop() {
+            for &v in &pred[w] {
+                let c = (1.0 + delta[w]) * sigma[v] as f32 / sigma[w] as f32;
+                *betweenness.entry((v, w)).or_default() += c;
+                delta[v] += c;
             }
-            betweenness
-        })
-        .reduce(BTreeMap::new, |mut x, y| {
-            for (k, v) in y {
-                *x.entry(k).or_insert(0.0) += v;
-            }
-            x
-        })
+        }
+    }
+
+    return betweenness;
 }
 
 pub fn girwan_newman(adj_list: &Vec<Vec<usize>>, max_cluster_size: usize) -> Vec<Vec<usize>> {
