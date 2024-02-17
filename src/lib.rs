@@ -45,87 +45,59 @@ pub fn save_largest_scc_sizes(filename: &str, graphs: &Graphs) {
     );
 }
 
-pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
+fn save_freeman_centralization(
+    filename: &str,
+    graphs: &Graphs,
+    centralities_func: fn(&Vec<Vec<usize>>) -> Vec<f32>,
+    max_graph_func: fn(usize) -> Vec<Vec<usize>>,
+) {
     plot::line_plot(
         filename,
         &dates()
             .map(|date| {
                 let g = graphs.till(&date);
-                let degree_centralities = centrality::degree_centralities(&g.adj_list);
-                let max_degree_centralities = centrality::degree_centralities(
-                    &centrality::create_star_graph_undirected(g.adj_list.len()),
-                );
-
-                let freeman_centralization = centrality::freeman_centralization(
-                    &degree_centralities,
-                    &max_degree_centralities,
-                );
+                let centralities = centralities_func(&g.adj_list);
+                let max_centralities = centralities_func(&max_graph_func(g.adj_list.len()));
+                let freeman_centralization =
+                    centrality::freeman_centralization(&centralities, &max_centralities);
                 (date, freeman_centralization)
             })
             .collect::<Vec<_>>(),
+    )
+}
+
+pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
+    save_freeman_centralization(
+        filename,
+        graphs,
+        centrality::degree_centralities,
+        centrality::create_star_graph_undirected,
     )
 }
 
 pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
-    plot::line_plot(
+    save_freeman_centralization(
         filename,
-        &dates()
-            .map(|date| {
-                let g = graphs.till(&date);
-                let indegree_centralities = centrality::indegree_centralities(&g.adj_list);
-                let max_indegree_centralities = centrality::indegree_centralities(
-                    &centrality::create_star_graph_undirected(g.adj_list.len()),
-                );
-
-                let freeman_centralization = centrality::freeman_centralization(
-                    &indegree_centralities,
-                    &max_indegree_centralities,
-                );
-                (date, freeman_centralization)
-            })
-            .collect::<Vec<_>>(),
+        graphs,
+        centrality::indegree_centralities,
+        centrality::create_star_graph_in,
     )
 }
 
 pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
-    plot::line_plot(
+    save_freeman_centralization(
         filename,
-        &dates()
-            .map(|date| {
-                let g = graphs.till(&date);
-                let outdegree_centralities = centrality::outdegree_centralities(&g.adj_list);
-                let max_outdegree_centralities = centrality::outdegree_centralities(
-                    &centrality::create_star_graph_out(g.adj_list.len()),
-                );
-
-                let freeman_centralization = centrality::freeman_centralization(
-                    &outdegree_centralities,
-                    &max_outdegree_centralities,
-                );
-                (date, freeman_centralization)
-            })
-            .collect::<Vec<_>>(),
+        graphs,
+        centrality::outdegree_centralities,
+        centrality::create_star_graph_out,
     )
 }
 
 pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) {
-    plot::line_plot(
+    save_freeman_centralization(
         filename,
-        &dates()
-            .map(|date| {
-                let g = graphs.till(&date);
-                let betweenness_centralities = centrality::betweenness_centralities(&g.adj_list);
-                let max_betweenness_centralities = centrality::betweenness_centralities(
-                    &centrality::create_star_graph_undirected(g.adj_list.len()),
-                );
-
-                let freeman_centralization = centrality::freeman_centralization(
-                    &betweenness_centralities,
-                    &max_betweenness_centralities,
-                );
-
-                (date, freeman_centralization)
-            })
-            .collect::<Vec<_>>(),
+        graphs,
+        centrality::betweenness_centralities,
+        centrality::create_star_graph_undirected,
     )
 }
