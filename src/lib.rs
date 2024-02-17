@@ -66,6 +66,28 @@ fn save_freeman_centralization(
     )
 }
 
+fn save_max_centrality(
+    filename: &str,
+    graphs: &Graphs,
+    centralities_func: fn(&Vec<Vec<usize>>) -> Vec<f32>,
+) {
+    plot::line_plot(
+        filename,
+        &dates()
+            .map(|date| {
+                let g = graphs.till(&date);
+                (
+                    date,
+                    centralities_func(&g.adj_list)
+                        .into_iter()
+                        .max_by(|a, b| a.partial_cmp(b).unwrap())
+                        .unwrap(),
+                )
+            })
+            .collect::<Vec<_>>(),
+    )
+}
+
 pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
     save_freeman_centralization(
         filename,
@@ -73,6 +95,10 @@ pub fn save_freeman_degree_centralization(filename: &str, graphs: &Graphs) {
         centrality::degree_centralities,
         centrality::create_star_graph_undirected,
     )
+}
+
+pub fn save_max_degree_centralization(filename: &str, graphs: &Graphs) {
+    save_max_centrality(filename, graphs, centrality::degree_centralities)
 }
 
 pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
@@ -84,6 +110,10 @@ pub fn save_freeman_indegree_centralization(filename: &str, graphs: &Graphs) {
     )
 }
 
+pub fn save_max_indegree_centralization(filename: &str, graphs: &Graphs) {
+    save_max_centrality(filename, graphs, centrality::indegree_centralities)
+}
+
 pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
     save_freeman_centralization(
         filename,
@@ -93,6 +123,10 @@ pub fn save_freeman_outdegree_centralization(filename: &str, graphs: &Graphs) {
     )
 }
 
+pub fn save_max_outdegree_centralization(filename: &str, graphs: &Graphs) {
+    save_max_centrality(filename, graphs, centrality::outdegree_centralities)
+}
+
 pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) {
     save_freeman_centralization(
         filename,
@@ -100,4 +134,8 @@ pub fn save_freeman_betweenness_centralization(filename: &str, graphs: &Graphs) 
         centrality::betweenness_centralities,
         centrality::create_star_graph_undirected,
     )
+}
+
+pub fn save_max_betweenness_centralization(filename: &str, graphs: &Graphs) {
+    save_max_centrality(filename, graphs, centrality::betweenness_centralities)
 }

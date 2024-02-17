@@ -13,6 +13,7 @@ fn main() {
         .collect();
 
     let graphs = Graphs::new(graph, dates);
+
     // let g = graphs.till(&Date::from("1995-01-01"));
     // let largest_scc_graph = community_detection::largest_scc_graph(&g);
     // let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 6);
@@ -23,21 +24,17 @@ fn main() {
     // );
     //
     // save_graphs(&graphs);
-    // println!("graphs");
     // save_scc_counts("plots/scc_counts.txt", &graphs);
-    // println!("scc counts");
     // save_largest_scc_sizes("plots/largest_scc_sizes.txt", &graphs);
-    // println!("largest scc sizes");
     //
+    // save_max_degree_centralization("plots/max_degree_centralization.txt", &graphs);
+    // save_max_indegree_centralization("plots/max_indegree_centralization.txt", &graphs);
+    // save_max_outdegree_centralization("plots/max_outdegree_centralization.txt", &graphs);
     // save_freeman_degree_centralization("plots/freeman_degree_centralization.txt", &graphs);
-    // println!("degree");
     // save_freeman_indegree_centralization("plots/freeman_indegree_centralization.txt", &graphs);
-    // println!("indegree");
     // save_freeman_outdegree_centralization("plots/freeman_outdegree_centralization.txt", &graphs);
-    // println!("outdegree");
     // save_freeman_betweenness_centralization(
     //     "plots/freeman_betweenness_centralization.txt",
     //     &graphs,
     // );
-    // println!("betweenness");
 }
