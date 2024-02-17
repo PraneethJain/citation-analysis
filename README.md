@@ -30,6 +30,20 @@
   <img src="plots/largest_wcc_sizes.png" align="middle" width="45%" />
 </p>
 
+- As expected, the saturation point in case of WCCs occurs much earlier (around
+  1993) than that of SCCs.
+- After this, any one way linkage between two sub-fields causes a merge in
+  between the two WCCs, thus we observe a rapid decline in the number of WCCs
+  after this.
+- Surprisingly, the size of the largest WCC increases almost linearly along with time.
+- On performing linear regression on this, we get an R2 score of 97%, verifying that the trend is indeed linear.
+
+<p align="middle">
+    <img src="plots/wcc_size_linreg.png" align="middle" />
+</p>
+
+- This can be used to predict the size of the largest WCC at arbitrary times.
+
 ### Degree Centrality
 
 <p align="middle">
