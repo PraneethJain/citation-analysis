@@ -24,7 +24,10 @@ To compute the neigbourhood of a node, we perform the following second order ran
 - The walk will go back to t with probability proportial to 1/p. The lower the p, the higher this probability, encouraging homophily and BFS like behaviour.
 - The walk will go to nodes away from t (not directly connected to t) with probability proportial to 1/q. The lower the q, the higher the probability, encouraging structural similarity and DFS like behaviour.
 - The walk will go to every other node with constant probability
- ![image](https://github.com/PraneethJain/citation-analysis/assets/49565677/a2126b0e-9a3b-4bdf-8453-525d01ba7cf6)
+
+<p align="middle">
+  <img src="https://github.com/PraneethJain/citation-analysis/assets/49565677/a2126b0e-9a3b-4bdf-8453-525d01ba7cf6" align="middle"/>
+</p>
 
 In conclusion, the algorithm is as follows
 - Compute the random walk probabilities
