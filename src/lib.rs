@@ -8,6 +8,20 @@ pub mod plot;
 
 pub use common::*;
 
+use std::collections::BTreeSet;
+use std::fs::{self, File};
+use std::io::{self, BufRead};
+use std::path::Path;
+use std::process::Command;
+
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
+
 fn dates() -> impl Iterator<Item = Date> {
     (1992..=2002).flat_map(|year| (1..=12).map(move |month| Date::new(year, month, 1)))
 }
@@ -18,6 +32,82 @@ pub fn save_graphs(graphs: &Graphs) {
             String::from("graphs/g") + &format!("{:04}-{:02}", date.year, date.month) + ".gv";
         graphviz::save(&filename, &graphs.till(&date));
     });
+}
+
+pub fn save_louvain_graphs(graphs: &Graphs) {
+    dates().for_each(|date| {
+        let g = graphs.till(&date);
+        let mut g_undirected = g.clone();
+        for (from, tos) in g.adj_list.iter().enumerate() {
+            for &to in tos {
+                g_undirected.adj_list[to].push(from);
+            }
+        }
+        let largest_scc_graph = community_detection::largest_scc_graph(&g_undirected);
+        let mut seen = BTreeSet::new();
+
+        let mut content = String::from("source,target\n");
+        for (from, tos) in largest_scc_graph.adj_list.iter().enumerate() {
+            for &to in tos {
+                if seen.insert((to, from)) && seen.insert((from, to)) {
+                    content += &format!("{},{}\n", from, to);
+                }
+            }
+        }
+        if let Err(e) = fs::write(
+            &format!(
+                "community_graphs/louvain/{:04}-{:02}.txt",
+                date.year, date.month
+            ),
+            content,
+        ) {
+            eprintln!("Error writing to file: {}", e);
+        }
+
+        let output = Command::new("just")
+            .args([
+                "rr",
+                "community",
+                &format!(
+                    "/home/bp87/Repos/citation-analysis/community_graphs/louvain/{:04}-{:02}.txt",
+                    date.year, date.month
+                ),
+                "-s",
+                &format!(
+                    "/home/bp87/Repos/citation-analysis/community_graphs/louvain/l{:04}-{:02}.txt",
+                    date.year, date.month
+                ),
+                "-h",
+                "hierarchy.tmp",
+            ])
+            .current_dir("/home/bp87/Repos/testing/fast-louvain")
+            .output()
+            .expect("failed to execute process");
+
+        if output.status.success() {
+            let mut communities = vec![vec![]; largest_scc_graph.adj_list.len()];
+            let mut max_community_index = 0;
+            if let Ok(lines) = read_lines(&format!(
+                "community_graphs/louvain/l{:04}-{:02}.txt",
+                date.year, date.month
+            )) {
+                for line in lines.flatten().skip(1) {
+                    let (node_index, community_index): (usize, usize) = match line.split_once(",") {
+                        Some((a, b)) => (a.parse().unwrap(), b.parse().unwrap()),
+                        None => panic!("no ,  in line: {:?}", line),
+                    };
+                    communities[community_index].push(node_index);
+                    max_community_index = max_community_index.max(community_index);
+                }
+            }
+            communities.resize(max_community_index, vec![]);
+
+            let filename = String::from("community_graphs/louvain/g")
+                + &format!("{:04}-{:02}", date.year, date.month)
+                + ".gv";
+            graphviz::save_with_colors(&filename, &largest_scc_graph.adj_list, &communities);
+        }
+    })
 }
 
 pub fn save_scc_counts(filename: &str, graphs: &Graphs) {

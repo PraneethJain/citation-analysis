@@ -13,14 +13,7 @@ fn main() {
         .collect();
 
     let graphs = Graphs::new(graph, dates);
-    // let g = graphs.till(&Date::from("1995-01-01"));
-    // let largest_scc_graph = community_detection::largest_scc_graph(&g);
-    // let communities = community_detection::girwan_newman(&largest_scc_graph.adj_list, 6);
-    // graphviz::save_with_colors(
-    //     "community_graphs/girwan_newman/g1995.gv",
-    //     &largest_scc_graph.adj_list,
-    //     &communities,
-    // );
+    save_louvain_graphs(&graphs);
     //
     // save_graphs(&graphs);
     // save_scc_counts("plots/scc_counts.txt", &graphs);

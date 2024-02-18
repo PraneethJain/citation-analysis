@@ -44,7 +44,7 @@ pub fn save_with_colors(filename: &str, adj_list: &Vec<Vec<usize>>, partitions: 
             index_to_partition[index] = partition;
         }
     }
-    let mut content = String::from("digraph g {\n\tnode[label=\"\"]\n");
+    let mut content = String::from("digraph g {\n\tnode[label=\"\"]\n\toutputorder=\"edgesfirst\"\n");
     for i in 0..adj_list.len() {
         content += &format!(
             "\t {} [color=\"{}\", fillcolor=\"{}\", style=filled]\n",
