@@ -40,8 +40,11 @@ In conclusion, the algorithm is as follows
 - All the 3 steps of the algorithm stated above are individually parallelizable. A simple shader can be written to execute this on the GPU for very large networks, or this can trivially be run over multiple threads concurrently.
 
 ## Weaknesses
+- The algorithm only takes connectivity into account and discards other properties of the graph.
 - The embeddings produced by node2vec are unstable. This means that a small change in the parameters might result in vastly different embeddings. [source](https://arxiv.org/pdf/2206.08252.pdf)
 - The algorithm is very general and assumes no knowledge about the downstream prediction task. While in theory this may seem like an advantage, for practical purposes, we do have knowledge of the prediction task. Engineering our features for the specific prediction task would result in better accuracy. 
 
 ## Improvements
-- The random walk probabilities only take connectivity into account. One could consider weighted properties of nodes (say centrality measures) into account as well. For example, we could give a higher probability to nodes with higher centrality as they are a better representative of the entire network.
+- One could consider weighted properties of nodes (say centrality measures) into account as well. For example, we could give a higher probability to nodes with higher centrality as they are a better representative of the entire network.
+- To stabilize the embeddings, multiple runs of the algorithm can be performed on the same parameters, and the average embedding for each node can be considered as the final embedding.
+- Better alternatives to softmax function can be considered. [source](https://arxiv.org/pdf/1711.03953.pdf)
