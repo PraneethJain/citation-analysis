@@ -105,8 +105,12 @@ ignore the scattered components.
 
 > 1992 (top left), 1993 (top right), 1994 (bottom left), 1995 (bottom right)
 
+### Louvain
+![louvain](./community_graphs/louvain/output.gif)
+
 ## Tools Used
 - [rust](https://www.rust-lang.org/): Programming language of choice
 - [graphviz](https://graphviz.org/): Command line graph visualization tool
 - [gnuplot](http://www.gnuplot.info/): Command line plotting tool
 - [ffmpeg](https://ffmpeg.org/): For creating the graph animation
+- [fast-louvain](https://github.com/Splines/fast-louvain): For louvain algorithm
