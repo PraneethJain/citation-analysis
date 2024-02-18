@@ -124,3 +124,15 @@ ignore the scattered components.
 - [gnuplot](http://www.gnuplot.info/): Command line plotting tool
 - [ffmpeg](https://ffmpeg.org/): For creating the graph animation
 - [fast-louvain](https://github.com/Splines/fast-louvain): For louvain algorithm
+
+## Algorithms Implemented
+- Degree Centrality
+- Betweenness Centrality (Brande's Algorithm)
+- Triangle Count
+- SCCs and WCCs (Tarjan's)
+- Girwan Newman
+- Linear Regression
+
+## Instructions
+- To run the code `cargo run --release`
+- In the plots/graphs folders, run the corresponding `plot.sh` script to generate plots/graphs from the saved files.
