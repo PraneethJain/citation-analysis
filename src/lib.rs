@@ -35,6 +35,7 @@ pub fn save_graphs(graphs: &Graphs) {
 }
 
 pub fn save_louvain_graphs(graphs: &Graphs) {
+    let mut vals = Vec::new();
     dates().for_each(|date| {
         let g = graphs.till(&date);
         let mut g_undirected = g.clone();
@@ -102,12 +103,15 @@ pub fn save_louvain_graphs(graphs: &Graphs) {
             }
             communities.resize(max_community_index, vec![]);
 
+            vals.push((date, max_community_index));
             let filename = String::from("community_graphs/louvain/g")
                 + &format!("{:04}-{:02}", date.year, date.month)
                 + ".gv";
             graphviz::save_with_colors(&filename, &largest_scc_graph.adj_list, &communities);
         }
-    })
+    });
+
+    plot::line_plot("plots/louvain_community_counts.txt", &vals)
 }
 
 pub fn save_scc_counts(filename: &str, graphs: &Graphs) {
