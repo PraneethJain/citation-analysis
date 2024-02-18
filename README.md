@@ -1,6 +1,8 @@
 # Analysis of High-Energy Physics citation network
 > http://snap.stanford.edu/data/cit-HepPh.html
 
+## [Paper Reading](PaperReading.md)
+
 ![graph-animation](./graphs/output.gif)
 
 ## Some properties
