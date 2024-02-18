@@ -35,9 +35,10 @@ In conclusion, the algorithm is as follows
 - Use stochastic gradient ascent to optimize the objective function
 
 ## Strengths
-- very flexible
-- can tune parameter
-- each of the 3 steps is parallelizable
+- This algorithm is very flexible as compared to others. This can be attributed to the random walk parameters that allow for neighbourhoods based on a good interpolation of BFS-like and DFS-like traversals.
+- It scales very well with large networks. As mentioned in the paper, the time taken to run node2vec scales linearly with the number of nodes in a network.
+- All the 3 steps of the algorithm stated above are individually parallelizable. A simple shader can be written to execute this on the GPU for very large networks, or this can trivially be run over multiple threads concurrently.
+
 ## Weaknesses
 - extends to edges not very good
 - specific to downstream task is better
