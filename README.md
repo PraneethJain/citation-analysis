@@ -107,6 +107,14 @@ ignore the scattered components.
 
 ### Louvain
 ![louvain](./community_graphs/louvain/output.gif)
+> Communities over time
+
+<p align="middle">
+  <img src="plots/louvain_community_counts.png" align="middle" width="45%" />
+</p>
+
+- The trend of community count over time is decreasing
+- The communities themselves are growing denser and larger, and as more papers are added, it leads to intermingling of communities.
 
 ## Tools Used
 - [rust](https://www.rust-lang.org/): Programming language of choice
